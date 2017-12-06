@@ -13,8 +13,30 @@ adminApp.controller('NavCtrl', function($scope, $state) {
 /*
 * Dashboard controller
 */
-adminApp.controller('dashboardCtrl', function($scope) {
-    
+adminApp.controller('dashboardCtrl', function($scope,Users,$stateParams) { console.log("here");
+    //$scope.profileUser = function() {
+        console.log("here");
+        $scope.params = {};
+        $scope.params.path = $stateParams.paraml;
+        console.log($scope.params);
+        //return false;
+        Users.adminsigledata($scope.params).then(function(res) {
+            if (res == null) {
+                window.location.href = '/404';
+            } else {
+                console.log(res);
+               //return false;
+               $scope.user = res;
+//                $scope.user.full_name = res.full_name;
+//                $scope.user.email = res.email;
+//                $scope.user.username = res.username;
+//                $scope.user.gender = res.gender;
+//                $scope.user.location = res.location;
+               
+            }
+            console.log($scope.user);
+        });
+    //}
 });
 
 /**
@@ -26,27 +48,61 @@ adminApp.controller('AllUsersCtrl', function($scope, userList,Users,$location) {
     $scope.users = userList.data;
     $scope.activePost = false;
     $scope.setActive = function(user) {
+        
         $scope.activeUser = user;        
     }
     
     $scope.deleteUser = function(id) {
-        $scope.data={};
-         $scope.data.id=id;
-        Users.remove($scope.data).then(function(res) {
-            if (res) {
-                $scope.del=res.message
-              
-                window.location.reload();
-            } else {
-                $scope.update = "error";
-            }
-        });
+        console.log("here i am");
+//        $scope.data={};
+//         $scope.data.id=id;
+//        Users.remove($scope.data).then(function(res) {
+//            if (res) {
+//                $scope.del=res.message
+//              
+//                window.location.reload();
+//            } else {
+//                $scope.update = "error";
+//            }
+//        });
     }
 });
+
 /*
 * Add user
 */
 adminApp.controller('addUserCtrl',function($scope,Users){
+    
+     google.maps.event.addDomListener(window, 'load', init());
+    function init() {
+        var input = document.getElementById('locationTextField');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            fillInAddress(autocomplete);
+        });
+
+    }
+
+    function fillInAddress(autocomplete) {
+
+        var place = autocomplete.getPlace();
+        $rootScope.selected = place.formatted_address;
+
+    }
+    $scope.fileNameChanged = function(input) {
+          $scope.loading = true;
+      console.log(input.files[0]);
+        Users.uploadimage(input.files[0]).then(function(res) {
+//            console.log(res[0].location);
+            $scope.loading = false;
+            if(res){  
+                //console.log(res);
+             $scope.user.image = res[0].location;
+             
+            }
+          
+        });
+    }
     $scope.user = {};
 
     $scope.addUser = function(){
@@ -70,7 +126,23 @@ adminApp.controller('addUserCtrl',function($scope,Users){
 /**
  * EditUsersCtrl
  */
-adminApp.controller('editUserCtrl', function($scope, Users, $stateParams) {
+adminApp.controller('editUserCtrl', function($scope, Users, $stateParams,$rootScope ) {
+      google.maps.event.addDomListener(window, 'load', init());
+    function init() {
+        var input = document.getElementById('locationTextField');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            fillInAddress(autocomplete);
+        });
+
+    }
+
+    function fillInAddress(autocomplete) {
+
+        var place = autocomplete.getPlace();
+        $rootScope.selected = place.formatted_address;
+
+    }
     $scope.user = {};
     $scope.params = {};
     $scope.params.path = $stateParams.paraml;
@@ -78,16 +150,15 @@ adminApp.controller('editUserCtrl', function($scope, Users, $stateParams) {
         if (res == null) {
             window.location.href = '/404';
         } else {
-            console.log(res);
+            //console.log(res);
+            //return false;
             $scope.user.full_name = res.data.full_name;
             $scope.user.email = res.data.email;
             $scope.user.username = res.data.username;
              $scope.user.gender = res.data.gender;
-             if(res.data.location){
-              $scope.user.location = res.data.location;   
-             }else{
-               $scope.user.location = "";     
-             }
+ 
+              $scope.user.location =  res.data.location;   
+  
              if(res.data.image){
               $scope.user.image = res.data.image;   
              }
@@ -97,14 +168,13 @@ adminApp.controller('editUserCtrl', function($scope, Users, $stateParams) {
     });
     
     $scope.fileNameChanged = function(input) {
-    console.log(input);
           $scope.loading = true;
       console.log(input.files[0]);
         Users.uploadimage(input.files[0]).then(function(res) {
 //            console.log(res[0].location);
             $scope.loading = false;
-            if(res){
-             console.log(res[0].location);   
+            if(res){  
+                //console.log(res);
              $scope.user.image = res[0].location;
              
             }
@@ -120,7 +190,7 @@ adminApp.controller('editUserCtrl', function($scope, Users, $stateParams) {
         $scope.newPost.username = this.user.username;
         $scope.newPost.id = this.user.id ;
         $scope.newPost.gender = this.user.gender;
-        $scope.newPost.location = this.user.location;
+        $scope.newPost.location = $rootScope.selected;
         $scope.newPost.image = this.user.image;
         console.log($scope.newPost)
         Users.update($scope.newPost).then(function(res) {

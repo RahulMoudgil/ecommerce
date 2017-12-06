@@ -17,6 +17,7 @@ var User = new mongoose.Schema({
         image:{type:String},
 	facebook_id:{ type: String},
         google_id:{ type: String},
+        twitter_id:{ type: String},
         facebook_token:{ type: String},
 	created_at: { type: Date, default: Date.now },
 	updated_at: { type: Date, default: Date.now }

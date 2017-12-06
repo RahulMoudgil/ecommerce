@@ -89,6 +89,18 @@ usersModule.service('Users', function($http) {
                 return err;
             });
         },
+        adminsigledata: function(id) {
+            console.log(id);
+            return $http({
+                method: 'post',
+                url: '/api/adminprofile',
+                data: id
+            }).then(function(res) {
+                return res.data;
+            }).catch(function(err) {
+                return err;
+            });
+        },
        
      userForgot: function(forUser) {
                 return $http({

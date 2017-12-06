@@ -44,6 +44,11 @@ adminApp.config(function($stateProvider, $urlRouterProvider){
 			url: '/editUser/:paraml',
 			templateUrl: '/admin/templates/editUser.html',
 			controller: 'editUserCtrl'
+		})
+                .state('profileUser', {
+			url: '/profileUser/:paraml',
+			templateUrl: '/admin/templates/profileUser.html',
+			controller: 'dashboardCtrl'
 		});
 });
 

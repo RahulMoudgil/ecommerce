@@ -26,9 +26,10 @@ var transporter = nodemailer.createTransport({
 });
 
 
+
 aws.config.update({
-    secretAccessKey: 'OMcY602SN8DvMAllBHs8OcTq0A2aJhrFkPCwONc1',
-    accessKeyId: 'AKIAJXW7XHAZETPD5B4A'
+    secretAccessKey: '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',
+    accessKeyId: 'AKIAJEMASLRRSJNZYHKQ'
 });
 
 var key = randomString + ".png";
@@ -47,7 +48,7 @@ var userupload = multer({
         s3: s3,
         bucket: 'ecoprofilephoto',
         key: function(req, file, cb) {
-            //console.log(file);
+           //console.log(file);
             var flname = file.originalname;
             cb(null, 'profilepic/' + dateNow + '' + flname); //use Date.now() for unique file keys
         }
