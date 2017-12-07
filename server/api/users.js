@@ -46,6 +46,11 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
             }else{
                 var image = '';
             }
+            if(req.body.location != ''){
+                var location = req.body.location;
+            }else{
+                var location = '';
+            }
             User.register(new User({
                 full_name: req.body.full_name,
                 email: req.body.email,
@@ -53,6 +58,7 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
                 username: req.body.username,
                 gender: req.body.gender,
                 image: image,
+                location: location,
             }), req.body.password, function(err, user) {
                 if (err) {
                     console.error(err.message);
@@ -142,14 +148,14 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
 
     // ************************* Twitter Login Api ********************************
     apiRouter.post('/users/twitterlogin', function(req, res) {
-        if (req.body.google_id) {
+        if (req.body.twitter_id) {
             User.findOne({'twitter_id': req.body.google_id}, function(err, user) {
                 if (user) {
                     res.json({"message": "Result Fetched Successfully", "error": 0, "data": user});
                 } else {
                     var newUser = new User();
-                    newUser.full_name = req.body.name;
-                    newUser.email = req.body.name;
+                    newUser.full_name = req.body.full_name;
+                    newUser.email = req.body.email;
                     newUser.role = 'customer';
                     newUser.username = req.body.name;
                     //gender: req.body.gender,
@@ -215,9 +221,13 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
             }
         });
     });
+    // ********************** User Edit Api ************************************
     apiRouter.post('/users/editusrdetails', function(req, res) {
-        console.log(req.body);
-
+            if(req.body.location != ''){
+                var location = req.body.location;
+            }else{
+                var location = '';
+            }
         User.findById({'_id': req.body.id}, function(err, user) {
 
             if (err) {
@@ -226,9 +236,8 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
                 user.full_name = req.body.full_name;
                 user.username = req.body.username;
                 user.gender = req.body.gender;
-                 user.email = req.body.email;
                 user.role = req.body.role;
-                user.location = req.body.location;
+                user.location = location;
                 user.image = req.body.image;
                 user.save(function(err) {
                     if (err) {
@@ -264,7 +273,7 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
         });
     });
 
-// ********************** User Edit Api ************************************
+
     apiRouter.post('/editusrID', function(req, res) {
         User.findById({'_id': req.body.id}, function(err, user) {
             if (err) {
@@ -289,25 +298,26 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
 
     // ******************************* Change Password Api************************************************
     apiRouter.post('/change_password_app', function(req, res) {
-        console.log(req.body);
-        passport.authenticate('local')(req, res, function() {
+        //console.log(req.body);
+        //return false;
+        passport.authenticate('local')(req, res, function() { 
 
-            if (req.body.new_password !== req.body.confirm_password) {
+            if (req.body.new_password !== req.body.confirm_password) { 
                 res.json({'error': 1, 'message': "Password and confirm password do not match.", 'status': false});
 
-            } else {
-                if (req.body.new_password === req.body.password) {
+            } else { 
+                if (req.body.new_password === req.body.password) { 
                     res.json({'error': 1, 'message': "You have entered the same current password as new password", 'status': false});
 
-                } else {
+                } else { 
                     User.findOne({'_id': req.body.id}, function(err, sanitizedUser) {
-                        console.log(sanitizedUser);
-                        if (sanitizedUser) {
+                        
+                        if (sanitizedUser) { 
                             sanitizedUser.setPassword(req.body.new_password, function() {
                                 sanitizedUser.save();
                                 res.json({'error': 0, 'message': "Password has been Changed", 'status': true});
                             });
-                        } else {
+                        } else { 
                             res.send({'error': 1, 'message': "User does not exist", 'status': false});
                         }
 
@@ -377,7 +387,7 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
                 host = req.get('host');//remember the server (i.e host) address
                 link = "http://" + req.get('host') + "/admin/resetpassword?id=" + user.salt;//create a url of the host server
                 var mailOptions = {
-                    from: 'rakeshmoyal@avainfotech.com',
+                    from: 'rahulsharma@avainfotech.com',
                     to: user.email,
                     subject: 'Forgot Password',
                     html: "Hello " + user.email + ",<br> Please Click on the link to change password.<br><a href=" + link + ">Click here to Change Password</a>"
@@ -385,7 +395,7 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
                 transporter.sendMail(mailOptions, function(error, info) {
                     if (error) {
                         console.log(error);
-                        res.json({"error": 1, "message": "Email has not been sent!"});
+                        res.json({"error": 1, "message": "Email has not been sent!", "data": error});
                     } else {
                         res.json({"error": 0, "message": "Email has been sent please check your email"});
                     }

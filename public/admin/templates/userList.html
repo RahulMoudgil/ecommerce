@@ -1,10 +1,7 @@
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>
-            Users
-            <small>List</small>
-        </h1>
+        <h1>Users<small>List</small></h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li><a href="#">Users</a></li>
@@ -62,7 +59,8 @@
                                         Delete</td> -->
 <!--                                    <td ng-confirm-click="Are you SURE you want to delete this User?" ng-click="deleteUser(user._id)" ng-class="'{{user._id}}'" style="cursor: pointer">
                                 Delete</td>-->
-                                <td ng-click="deleteUser(user._id)" ng-confirm-click="Are you SURE you want to delete this User?" ng-class="'{{user._id}}'" ng-show="{{user.role!='admin'}}" style="cursor: pointer">Delete</td>
+                                <td ng-click="showconfirmbox(user._id)" ng-class="'{{user._id}}'" style="cursor: pointer">
+                                Delete</td>
                                 </tr>                                
                             </tbody>
                             <tfoot>

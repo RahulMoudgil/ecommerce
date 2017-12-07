@@ -20,16 +20,16 @@ var transporter = nodemailer.createTransport({
     host: 'email-smtp.us-east-1.amazonaws.com',
     port: 587,
     auth: {
-        user: "AKIAJVXBUELTWRZ7PZCQ",
-        pass: "Ap69lKNzBoU1WgAxvpQqilM09x/KEfv97B1fgX2jYH+r"
+        user: "AKIAJAXR6IF3JGCX4CFA",
+        pass: "AnJtOFrO/B44G9fRF+j4n7ZLXSh096uT54q4kXt3tI5F"
     }
 });
 
 
 
 aws.config.update({
-    secretAccessKey: 'rNz/3oHBOxRle/5dGoae3HYmaopCgvd2lcofot2X',
-    accessKeyId: 'AKIAJEMASLRRSJNZYHKQ'
+    secretAccessKey: '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',
+    accessKeyId: 'AKIAJZC5K4CV2KJK43FA'
 });
 
 var key = randomString + ".png";
@@ -77,6 +77,10 @@ module.exports = function(app, passport) {
     
     router.get('/admin/forgotpassword', function(req, res) {
         res.render('admin/forgotpassword');
+    });
+    router.get('/admin/logout', function(req, res) {
+        req.logout();
+        res.redirect('/admin');
     });
      ///sitemap
     router.get('/sitemap.xml', function(req, res) {

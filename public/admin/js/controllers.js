@@ -13,65 +13,55 @@ adminApp.controller('NavCtrl', function($scope, $state) {
 /*
 * Dashboard controller
 */
-adminApp.controller('dashboardCtrl', function($scope,Users,$stateParams) { console.log("here");
-    //$scope.profileUser = function() {
-        console.log("here");
+adminApp.controller('dashboardCtrl', function($scope,Users,$stateParams) { 
         $scope.params = {};
         $scope.params.path = $stateParams.paraml;
-        console.log($scope.params);
-        //return false;
         Users.adminsigledata($scope.params).then(function(res) {
             if (res == null) {
                 window.location.href = '/404';
             } else {
-                console.log(res);
-               //return false;
                $scope.user = res;
-//                $scope.user.full_name = res.full_name;
-//                $scope.user.email = res.email;
-//                $scope.user.username = res.username;
-//                $scope.user.gender = res.gender;
-//                $scope.user.location = res.location;
+
                
             }
             console.log($scope.user);
         });
-    //}
 });
 
 /**
  * AllUsersCtrl
  */
-adminApp.controller('AllUsersCtrl', function($scope, userList,Users,$location) {
-    console.log("userlist");
-    console.log(userList);
+adminApp.controller('AllUsersCtrl', function($scope, userList, Users, $location, $window) {
     $scope.users = userList.data;
     $scope.activePost = false;
     $scope.setActive = function(user) {
-        
-        $scope.activeUser = user;        
+
+        $scope.activeUser = user;
     }
-    
-    $scope.deleteUser = function(id) {
-        console.log("here i am");
-//        $scope.data={};
-//         $scope.data.id=id;
-//        Users.remove($scope.data).then(function(res) {
-//            if (res) {
-//                $scope.del=res.message
-//              
-//                window.location.reload();
-//            } else {
-//                $scope.update = "error";
-//            }
-//        });
+    $scope.showconfirmbox = function(id) {
+        if ($window.confirm("Do you want to delete this User?")) {
+            $scope.data = {};
+            $scope.data.id = id;
+            Users.remove($scope.data).then(function(res) {
+                if (res) {
+                    $scope.del = res.message
+
+                    window.location.reload();
+                } else {
+                    $scope.update = "error";
+                }
+            });
+        } else {
+            console.log("No");
+        }
     }
+
 });
 
 /*
 * Add user
 */
-adminApp.controller('addUserCtrl',function($scope,Users){
+adminApp.controller('addUserCtrl',function($scope,Users,$rootScope){
     
      google.maps.event.addDomListener(window, 'load', init());
     function init() {
@@ -113,7 +103,10 @@ adminApp.controller('addUserCtrl',function($scope,Users){
         $scope.newUser.full_name = this.user.full_name;
         $scope.newUser.username = this.user.username;
        $scope.newUser.gender = this.user.gender;
-        console.log($scope.newUser);
+       $scope.newUser.location = $rootScope.selected;
+       $scope.newUser.image = this.user.image;
+        //console.log($scope.newUser);
+        //return false;
         Users.add($scope.newUser).then(function(res) {
             console.log(res);
             $scope.message=res.message;
