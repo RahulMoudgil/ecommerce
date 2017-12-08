@@ -40,7 +40,7 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
 
 //*************************************** Register Api ************************************************************
     apiRouter.post('/users/register', function(req, res) {
-        if (req.body.password === req.body.confirm_password) {
+        if (req.body.password == req.body.confirm_password) {
             if(req.body.image != ''){
                 var image = req.body.image;
             }else{
@@ -131,7 +131,7 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
                     newUser.role = 'customer';
                     newUser.username = req.body.email;
                     //gender: req.body.gender,
-                    newUser.google_id = req.body.facebook_id;
+                    newUser.facebook_id = req.body.facebook_id;
                     newUser.image = req.body.image;
                     newUser.save(function(err) {
                         if (err) {
@@ -159,7 +159,7 @@ module.exports = function(apiRouter, passport, transporter, s3, randomString, us
                     newUser.role = 'customer';
                     newUser.username = req.body.name;
                     //gender: req.body.gender,
-                    newUser.google_id = req.body.twitter_id;
+                    newUser.twitter_id = req.body.twitter_id;
                     newUser.image = req.body.image;
                     newUser.save(function(err) {
                         if (err) {

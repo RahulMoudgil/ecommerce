@@ -42,11 +42,13 @@ adminApp.controller('AllUsersCtrl', function($scope, userList, Users, $location,
         if ($window.confirm("Do you want to delete this User?")) {
             $scope.data = {};
             $scope.data.id = id;
+            //$scope.use = "usertr" + id;
+            
             Users.remove($scope.data).then(function(res) {
                 if (res) {
                     $scope.del = res.message
-
-                    window.location.reload();
+                    $(".usertr" + id).css("display", "none");
+                   // window.location.reload();
                 } else {
                     $scope.update = "error";
                 }

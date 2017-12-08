@@ -41,7 +41,7 @@
                             </thead>
                             <tbody>
 
-                                <tr  ng-if="user.role!='admin'" ng-repeat='user in users track by $index'>
+                                <tr  ng-if="user.role!='admin'" class="usertr{{user._id}}"  ng-repeat='user in users track by $index'>
                                     <td ng-class="'{{user._id}}'">{{$index + 1}}</td>                                              
                                     <td ng-class="'{{user._id}}'">{{user.email}}</td>
                                     <td ng-class="'{{user._id}}'">{{user.full_name}}</td>                                   
@@ -59,7 +59,7 @@
                                         Delete</td> -->
 <!--                                    <td ng-confirm-click="Are you SURE you want to delete this User?" ng-click="deleteUser(user._id)" ng-class="'{{user._id}}'" style="cursor: pointer">
                                 Delete</td>-->
-                                <td ng-click="showconfirmbox(user._id)" ng-class="'{{user._id}}'" style="cursor: pointer">
+                                <td ng-click="showconfirmbox(user._id)" ng-class="'{{user._id}}'" id="deleteusersingle"  data-id="{{user._id}}" style="cursor: pointer">
                                 Delete</td>
                                 </tr>                                
                             </tbody>
@@ -151,3 +151,11 @@
     </section>
     <!-- /.content -->
 </div>
+<!--<script>
+    $(document).ready(function(){
+        $("#deleteusersingle").click(function(){ alert("here");
+            var uid = $("data").id();
+            console.log(uid);
+        })
+    });
+</script>-->
